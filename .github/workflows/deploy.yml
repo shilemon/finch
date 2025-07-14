@@ -2,27 +2,35 @@ name: Deploy Docker Compose App
 
 on:
   push:
-    branches: [dev] # Change this to your default branch if different
-  # workflow_dispatch: # Allows manual triggering
+    branches: [dev]  # Triggers on push to 'dev' branch
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Set up Docker Compose
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Docker and Docker Compose
         run: |
-          docker-compose --version
-      - name: Checking out code
+          sudo apt-get update
+          sudo apt-get install -y docker.io docker-compose
+          sudo systemctl start docker
+          sudo usermod -aG docker $USER
+
+      - name: Build and Run Docker Compose App
         run: |
-          cd /home/ubuntu/finch/finch-frontend
-          git stash
-          git fetch
+          # Ensure on dev branch
+          git fetch origin
           git checkout dev
           git pull origin dev
-          cd ..
-          # Build and start the containers
+
+          # Build and start containers
           docker-compose up -d --build
 
-          # Remove unused images
+          # Clean up unused Docker images
           docker image prune -f
+
+          # Show running containers
           docker ps
