@@ -2,28 +2,35 @@ name: Deploy Docker Compose App
 
 on:
   push:
-    branches: [dev] # Change this to your default branch if different
-  # workflow_dispatch: # Allows manual triggering
+    branches: [dev]  # Triggers on push to 'dev' branch
 
 jobs:
   deploy:
-    runs-on: Finch-runner # This ensures the workflow runs on your machine
+    runs-on: Finch-runner  # Self-hosted runner label
 
     steps:
-      - name: Set up Docker Compose
+      - name: Print Docker Compose Version
         run: |
-          docker-compose --version
-      - name: Checking out code
+          sudo docker-compose --version
+
+      - name: Checkout Code and Deploy App
         run: |
           cd /home/ubuntu/finch/finch-frontend
-          git stash
-          git fetch
+
+          # Ensure you're on the dev branch
+          git stash || true
+          git fetch origin
           git checkout dev
           git pull origin dev
-          cd ..
-          # Build and start the containers
-          docker-compose up -d --build
 
-          # Remove unused images
-          docker image prune -f
-          docker ps
+          # Go to project root (where docker-compose.yaml is located)
+          cd ..
+
+          # Build and start the app
+          sudo docker-compose up -d --build
+
+          # Clean up unused images
+          sudo docker image prune -f
+
+          # Show running containers
+          sudo docker ps
