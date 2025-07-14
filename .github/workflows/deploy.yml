@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  
+    runs-on: Finch-runner  
 
     steps:
       - name: Print Docker Compose Version
