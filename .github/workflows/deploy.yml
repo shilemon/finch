@@ -7,8 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: Finch-runner # This ensures the workflow runs on your machine
-
+    runs-on: ubuntu-latest 
     steps:
       - name: Set up Docker Compose
         run: |
