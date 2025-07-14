@@ -2,12 +2,11 @@ name: Deploy Docker Compose App
 
 on:
   push:
-    branches: [dev]  # Triggers on push to 'dev' branch
+    branches: [dev]  
 
 jobs:
   deploy:
-    runs-on: Finch-runner  # Self-hosted runner label
-
+    runs-on: ubuntu-latest  
     steps:
       - name: Print Docker Compose Version
         run: |
